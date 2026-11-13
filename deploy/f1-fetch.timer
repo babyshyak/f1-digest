@@ -1,0 +1,10 @@
+[Unit]
+Description=Collect F1 articles every 3 hours (and after boot if a run was missed)
+
+[Timer]
+OnCalendar=*-*-* 00/3:00:00
+Persistent=true
+Unit=f1-fetch.service
+
+[Install]
+WantedBy=timers.target

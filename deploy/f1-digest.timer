@@ -1,0 +1,10 @@
+[Unit]
+Description=Run F1 Digest every morning (and straight after boot if a run was missed)
+
+[Timer]
+OnCalendar=*-*-* 07:30:00
+Persistent=true
+Unit=f1-digest.service
+
+[Install]
+WantedBy=timers.target

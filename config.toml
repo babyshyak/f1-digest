@@ -1,0 +1,80 @@
+# F1 Digest settings. Secrets (API keys, your email) go in .env, NOT here.
+
+[general]
+timezone = "Europe/Dublin"
+window_days = 30        # archive length
+fresh_days = 2          # a story must have an article this recent to be shown (covers a missed day)
+resurface_days = 7      # an already-shown story can come back only after this many days AND with new articles
+max_items = 12          # max stories per day
+
+[ai]
+ollama_url = "http://localhost:11434"
+embed_model = "all-minilm"     # tiny (46MB), fast on a Pi
+chat_model = "qwen2.5:3b"      # use "qwen2.5:1.5b" on a Pi 4 / 4GB
+fulltext = true               # read the full article (best one per story) before summarising
+article_chars = 2500           # how much of it the model reads (more = slower, Pi reads ~30 tokens/s)
+similarity = 0.72              # cosine threshold for "same story" (embeddings)
+duplicate_similarity = 0.88    # above this an article is a copy of known news: counted as confirmation, never shown
+lexical_duplicate = 0.8
+lexical_similarity = 0.5       # used only if Ollama is down
+
+[filters]
+# Articles whose TITLE contains any of these are ignored (noise, not news). Edit freely.
+# For broad aggregator feeds (marked broad = true): keep only items mentioning one of these.
+require_any = ["f1", "formula 1", "formula one", "grand prix", "fia", "verstappen", "hamilton", "norris", "leclerc", "piastri", "russell", "alonso", "red bull", "ferrari", "mclaren", "mercedes", "aston martin", "williams", "alpine", "haas", "sauber", "audi", "cadillac"]
+exclude = ["how to watch", "tv times", "tv guide", "start time", "live updates", "live blog", "betting", "odds", "tickets", "quiz", "podcast", "fantasy"]
+
+[ranking]
+# Raises a story's rank so a big single-source scoop isn't buried under widely-copied fluff.
+boost_keywords = ["disqualified", "penalty", "penalised", "retire", "signs", "contract", "confirmed", "announce", "crash", "red flag", "sacked", "regulation", "ban", "appeal", "championship", "podium", "pole", "wins", "withdraw", "injur", "replace"]
+trusted_sources = ["BBC Sport", "Autosport", "Motorsport.com", "The Race", "RaceFans", "Sky Sports"]
+
+[backup]
+dir = ""     # blank = data/backups on the Pi. Point at a USB stick, e.g. "/media/pi/USB/f1-backups"
+keep = 7
+
+[email]
+provider = "resend"            # "resend" or "brevo"
+send_empty = false             # don't email on days with nothing new
+
+[site]
+publish = true                 # git commit + push docs/ after each run
+url = ""                       # your GitHub Pages URL, shown as a link in the email
+
+[[feeds]]
+name = "Autosport"
+url = "https://www.autosport.com/rss/f1/news/"
+
+[[feeds]]
+name = "Motorsport.com"
+url = "https://www.motorsport.com/rss/f1/news/"
+
+[[feeds]]
+name = "BBC Sport"
+url = "https://feeds.bbci.co.uk/sport/formula1/rss.xml"
+
+[[feeds]]
+name = "Sky Sports"
+url = "https://www.skysports.com/rss/12433"
+
+[[feeds]]
+name = "RaceFans"
+url = "https://www.racefans.net/feed/"
+
+[[feeds]]
+name = "The Race"
+url = "https://the-race.com/category/formula-1/feed/"
+
+[[feeds]]
+name = "PlanetF1"
+url = "https://www.planetf1.com/feed"
+
+[[feeds]]
+name = "Crash.net"
+url = "https://www.crash.net/rss/f1"
+
+# Optional broader net (aggregates many outlets). Uncomment, then run check-feeds to verify:
+# [[feeds]]
+# name = "Google News"
+# url = "https://news.google.com/rss/search?q=formula+1&hl=en-GB&gl=GB&ceid=GB:en"
+# broad = true

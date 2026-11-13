@@ -1,0 +1,12 @@
+[Unit]
+Description=F1 Digest (daily summary + email)
+Wants=network-online.target
+After=network-online.target ollama.service
+
+[Service]
+Type=oneshot
+User=@USER@
+WorkingDirectory=@DIR@
+ExecStart=/bin/sh @DIR@/run_daily.sh
+TimeoutStartSec=3h
+Nice=10
